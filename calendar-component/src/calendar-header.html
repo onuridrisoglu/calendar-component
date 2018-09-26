@@ -1,0 +1,45 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/vaadin-lumo-styles/typography.html">
+<link rel="import" href="../bower_components/vaadin-lumo-styles/sizing.html">
+<link rel="import" href="../bower_components/vaadin-lumo-styles/spacing.html">
+<link rel="import" href="../bower_components/vaadin-lumo-styles/color.html">
+
+<dom-module id="calendar-header">
+    <template>
+    	<style include="lumo-typography lumo-color">
+    		.column-container {
+		    display: flex;
+		    box-sizing: border-box;
+		    user-select: none;
+		    border-bottom: 1px solid var(--lumo-contrast-5pct);
+    		}
+    		
+    		.column-header {
+    			display: flex;
+		    flex-flow: row nowrap;
+		    align-items: center;
+		    font-size: var(--lumo-font-size-xs);
+		    font-weight: 500;
+		    color: var(--lumo-body-text-color);
+		    line-height: var(--lumo-line-height-xs);
+		    padding-left: var(--lumo-space-s);
+    		}
+    	</style>
+<div class="column-container space-wide-xl">
+ <label id="columnTitle" class="column-header">[[title]]</label>
+</div>
+</template>
+    <script>
+        class CalendarHeader extends Polymer.Element {
+            static get is() {
+                return 'calendar-header';
+            }
+            static get properties() {
+                return {
+		            title: String
+                };
+            }
+        }
+        customElements.define(CalendarHeader.is, CalendarHeader);
+    </script>
+</dom-module>

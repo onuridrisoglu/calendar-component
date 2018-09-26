@@ -1,0 +1,42 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/vaadin-text-field/vaadin-text-field.html">
+<link rel="import" href="../bower_components/vaadin-lumo-styles/typography.html">
+<link rel="import" href="../bower_components/vaadin-lumo-styles/sizing.html">
+<link rel="import" href="../bower_components/vaadin-lumo-styles/spacing.html">
+<link rel="import" href="../bower_components/vaadin-lumo-styles/color.html">
+<link rel="import" href="../bower_components/vaadin-lumo-styles/badge.html">
+
+<dom-module id="calendar-event">
+    <template>
+    		<style include="lumo-typography lumo-color lumo-badge">
+    			.event-item {
+	    			display: block;
+ 			    margin-top: var(--lumo-space-xs); 
+    				white-space: nowrap;
+  				overflow: hidden;
+  				text-overflow: ellipsis;
+  				min-width: 0;
+  				cursor: pointer;
+    			}
+    		</style>
+		<div class="event-item" theme="badge small primary">
+			<span title=[[item.subject]] on-click="processItemClicked">[[item.subject]]</span>
+		</div>
+	</template>
+    <script>
+        class CalendarEvent extends Polymer.Element {
+            static get is() {
+                return 'calendar-event';
+            }
+            static get properties() {
+                return {
+		            item: Object
+                };
+            }
+            processItemClicked() {
+            		this.dispatchEvent(new CustomEvent('event-clicked', {detail: this.item}));
+            }
+        }
+        customElements.define(CalendarEvent.is, CalendarEvent);
+    </script>
+</dom-module>

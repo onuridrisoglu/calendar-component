@@ -1,0 +1,184 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/vaadin-lumo-styles/icons.html">
+<link rel="import" href="../bower_components/vaadin-icons/vaadin-icons.html">
+<link rel="import" href="../bower_components/vaadin-button/vaadin-button.html">
+<link rel="import" href="../bower_components/vaadin-lumo-styles/spacing.html">
+<link rel="import" href="calendar-month.html">
+<link rel="import" href="calendar-header.html">
+<link rel="import" href="calendar-event.html">
+
+<dom-module id="calendar-component">
+    <template>
+    		<style>
+    			.calendar-container {
+    				width: 100%;
+    				display: flex;
+    				flex-direction: row;
+    				flex-wrap: wrap;
+    			}
+    			.calendar-container > *{
+    				flex: 1 1 14.2%;
+    				min-width: 80px;
+    			}
+    			:host([hide-weekends]) .calendar-container > * {
+			    flex: 1 1 20%;
+			 }
+    			.calendar-header-toolbar {
+    				padding-bottom: var(--lumo-space-m);
+    			}
+    			.current-month {
+    				font-family: var(--lumo-font-family);
+    				font-size: var(--lumo-font-size-m);
+    			}
+    			
+    		</style>
+    		<div class="calendar-header-toolbar">
+			<vaadin-button theme="tertiary-inline" on-click="_navigateToPreviousMonth">
+				<iron-icon icon="lumo:arrow-left"></iron-icon>
+			</vaadin-button>
+			<span class="current-month">[[selectedDateText]]</span>			
+			<vaadin-button theme="tertiary-inline" on-click="_navigateToNextMonth">
+				<iron-icon icon="lumo:arrow-right"></iron-icon>
+			</vaadin-button>			
+    		</div>
+    		<div id="container" class="calendar-container">
+    			
+    		</div>
+	</template>
+    <script>
+        class CalendarComponent extends Polymer.Element {
+            static get is() {
+                return 'calendar-component';
+            }
+            static get properties() {
+                return {
+	                	selectedDate: {
+		            		type: Date,
+		            		value: new Date((new Date()).getFullYear(), (new Date()).getMonth(), 1),
+		            		notify: true,
+		            		observer : '_processSelectedDateChange'
+		            },
+	                	selectedDateText: {
+		            		type: String,
+		            		value: ''
+		            },
+		            hideWeekends: {
+		            		type : Boolean,
+		            		value: false,
+		            		reflectToAttribute: true
+		            },
+		            items: {
+		            		type: Array,
+		            		reflectToAttribute: true,
+		            		observer : '_processItemsChange'
+		            }
+                };
+            }
+            eventClicked(e) {
+            		console.log(e);
+            		document.dispatchEvent(new CustomEvent('EventClicked', {detail: e.detail}));
+            }
+            ready() {
+	            	super.ready();
+	            	document.addEventListener('keydown', this._processKeyPress.bind(this));
+	         	this._createDetails();
+	        }
+            _processSelectedDateChange(val) {
+            		this._setSelectedDateText(val);
+            		this._clearContainer();
+            		this._createHeaders();
+            		this._createDetails(val);
+            		this._processItemsChange(this.items);
+            }
+            _processItemsChange(items) {
+	        		this._clearEvents();
+	        		if (items)
+		        		for (var item of items) {
+		        			this._addEvent(item);
+		        		}
+	        }
+            _processKeyPress(e){
+            		if (e.key === 'Left' || e.key === 'ArrowLeft')
+            			this._navigateToPreviousMonth();
+            		else if (e.key === 'Right' || e.key === 'ArrowRight')
+            			this._navigateToNextMonth();
+            }
+            _clearContainer() {
+            		var container = this.$.container;
+            		while (container.firstChild)
+            			container.removeChild(container.firstChild);
+            }
+            _createHeaders() {
+         		var days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+         		for (var day of days) {
+         			if (this.hideWeekends && (day === 'Sat' || day === 'Sun'))
+         				continue;
+         		    var header = new CalendarHeader();
+         		    header.setAttribute("title", day);
+         		    this.$.container.appendChild(header);
+         		}
+        		}
+            _createDetails(val) {
+            		if (val == undefined)
+            			return;
+	            var now = new Date(val.getTime());
+	            var currentMonth = now.getMonth();
+         		var index = new Date(now.getFullYear(), currentMonth, 1);
+         		while (index.getDay() != 1)  
+         			index.setDate(index.getDate() -1);
+         		while ((index.getMonth() <= currentMonth && index.getYear() == now.getYear()) || (index.getYear() < now.getYear())) {
+         			var column = new CalendarMonth();
+         			column.setAttribute("col-date", index);
+         			column.setAttribute("selected-date", now);
+         			if (!this.hideWeekends || (index.getDay() != 0 && index.getDay() != 6))
+         				this.$.container.appendChild(column);
+         			index.setDate(index.getDate() + 1);
+         		}
+         		while (index.getDay() != 1)  {
+         			var column = new CalendarMonth();
+         			column.setAttribute("col-date", index);
+         			column.setAttribute("selected-date", now);
+         			if (!this.hideWeekends || (index.getDay() != 0 && index.getDay() != 6))
+         				this.$.container.appendChild(column);
+         			index.setDate(index.getDate()  + 1);
+         		}
+        		}
+            _setSelectedDateText(val) {
+            		var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            		this.selectedDateText = MONTHS[val.getMonth()] + " " + val.getFullYear();
+            }
+            _navigateToPreviousMonth() {
+            		var prevMonth = new Date(this.selectedDate.getTime());
+            		prevMonth.setDate(1);
+            		prevMonth.setMonth(prevMonth.getMonth() - 1);
+            		this.selectedDate = prevMonth;
+            }
+            _navigateToNextMonth() {
+	            	var nextMonth = new Date(this.selectedDate.getTime());
+	            	nextMonth.setDate(1);
+	        		nextMonth.setMonth(nextMonth.getMonth() + 1);
+	        		this.selectedDate = nextMonth;
+            }
+            _addEvent(item) {
+         		for (var column of this.$.container.children){
+         			if (column.tagName === 'CALENDAR-HEADER')
+         		    		continue;
+         			var itemDate = new Date(item.date);
+         		    	if (column.colDate.toDateString() === itemDate.toDateString()){
+         		    		var ce = new CalendarEvent();
+         		    		ce.item = item;
+         		    		ce.addEventListener('event-clicked', this.eventClicked);
+         		    		column.appendEvent(ce);
+         		    	}
+         		 }
+            }
+            _clearEvents() {
+	            	for (var column of this.$.container.children){
+			    		if (column.tagName !== 'CALENDAR-HEADER')
+			    			column.clearEvents();
+			    }
+            }
+        }
+        customElements.define(CalendarComponent.is, CalendarComponent);
+    </script>
+</dom-module>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>calendar-component demo</title>
+
+    <script src="../../bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <link rel="import" href="../../bower_components/iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../bower_components/iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../src/calendar-component.html">
+
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+      </style>
+    </custom-style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic calendar-component demo</h3>
+      <demo-snippet>
+        <template>
+          <calendar-component items='[{"date":"2018-09-26","subject":"1:1 Meeting"}, {"date":"2018-09-24","subject":"Home Team Weekly"}, {"date":"2018-09-27","subject":"Tech Lunch"}]'></calendar-component>
+        </template>
+          <script>
+          	document.addEventListener('WebComponentsReady', function() {
+          		var calendar = document.querySelector('calendar-component');
+          		document.addEventListener('EventClicked', function(e) {
+            			alert(e.detail.subject);
+            		});
+  			})
+        </script>
+      </demo-snippet>
+    </div>
+  </body>
+</html>

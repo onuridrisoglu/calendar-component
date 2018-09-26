@@ -1,0 +1,111 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/vaadin-icons/vaadin-icons.html">
+<link rel="import" href="../bower_components/vaadin-lumo-styles/typography.html">
+<link rel="import" href="../bower_components/vaadin-lumo-styles/sizing.html">
+<link rel="import" href="../bower_components/vaadin-lumo-styles/spacing.html">
+<link rel="import" href="../bower_components/vaadin-lumo-styles/color.html">
+
+<dom-module id="calendar-month">
+    <template>
+    	<style include="lumo-typography lumo-color">
+		 :host([is-today]) .column-wrapper {
+		    border-top-color: var(--lumo-contrast-50pct);
+		 }
+		 :host(:not([is-selected-month])) .month-wrapper {
+		 	background-color: var(--lumo-contrast-5pct);
+		 }
+    		.month-wrapper {
+		    display: flex;
+		    flex-direction: column;
+		    box-sizing: border-box;
+		    user-select: none;
+		    margin-left: var(--lumo-space-xs);
+		    border-top: var(--lumo-space-xs) solid var(--lumo-contrast-10pct);
+    			min-height: 105px;
+    		}
+    		
+    		.month-header {
+    			display: flex;
+		    flex-flow: row nowrap;
+		    align-items: center;
+		    font-size: var(--lumo-font-size-xs);
+		    font-weight: 500;
+		    color: var(--lumo-secondary-text-color);
+		    padding: var(--lumo-space-xs);
+    		}
+    		
+    		iron-icon.size-s {
+	      width: var(--lumo-icon-size-s);
+	      height: var(--lumo-icon-size-s);
+	    }
+    		
+    	</style>
+<div class="month-wrapper">
+ <span id="monthTitle" class="month-header">
+ 	<iron-icon icon="vaadin:calendar-o" class="size-s" hidden$="[[!isToday]]"></iron-icon>&nbsp;[[title]]
+ </span>
+ <div id="eventContainer" class="event-container">
+ </div>
+</div>
+</template>
+    <script>
+        class CalendarMonth extends Polymer.Element {
+            static get is() {
+                return 'calendar-month';
+            }
+            static get properties() {
+                return {
+                    colDate: {
+		                type: Date,
+		                value: new Date(),
+		                observer: '_columnDateChanged'
+		            },
+		            selectedDate: {
+		            		type: Date,
+		            		value: new Date()
+		            },
+		            isSelectedMonth: {
+		            		type : Boolean,
+		            		reflectToAttribute: true
+		            	},
+		            isToday: {
+		            		type : Boolean,
+		            		reflectToAttribute: true
+		            	},
+		            title: String
+                };
+            }
+            appendEvent(event) {
+            		this.$.eventContainer.appendChild(event);
+            }
+            clearEvents() {
+            		var container = this.$.eventContainer;
+            		while (container.firstChild)
+            			container.removeChild(container.firstChild);
+            }
+            _columnDateChanged(val) {
+            		this._setColumnDateTitle(val);
+            		this._setIsSelectedMonth(val); 		
+            }
+            
+            _setColumnDateTitle(val) {
+            		var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+            		var date = val.getDate();
+            		this.title = date;
+            		if (date != 1)
+            			return;
+            		var month = val.getMonth();
+            		this.title = MONTHS[month] + " " + this.title;
+            		if (month != 0)
+            			return;
+            		this.title = this.title + ", " + val.getFullYear();  
+            }
+            _setIsSelectedMonth(val) {
+            		this.isSelectedMonth = val.getYear() == this.selectedDate.getYear() && val.getMonth() == this.selectedDate.getMonth();
+            		var now = new Date();
+            		this.isToday = val.getYear() == now.getYear() && val.getMonth() == now.getMonth() && val.getDate() == now.getDate();
+            }
+        }
+        customElements.define(CalendarMonth.is, CalendarMonth);
+    </script>
+</dom-module>

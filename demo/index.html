@@ -6,10 +6,10 @@
 
     <title>calendar-component demo</title>
 
-    <script src="../webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
 
-    <link rel="import" href="../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
     <link rel="import" href="../calendar-component.html">
 
     <custom-style>
@@ -22,13 +22,14 @@
       <h3>Basic calendar-component demo</h3>
       <demo-snippet>
         <template>
-          <calendar-component items='[{"date":"2018-09-26","subject":"1:1 Meeting"}, {"date":"2018-09-24","subject":"Home Team Weekly"}, {"date":"2018-09-27","subject":"Tech Lunch"}]'></calendar-component>
+          <calendar-component active-date="2018-08-01" items='[{"date":"2018-08-08","subject":"Meeting"}, {"date":"2018-08-14","subject":"Dentist Appointment"}, {"date":"2018-08-24","subject":"Dinner with Friends"}]'></calendar-component>
         </template>
           <script>
           	document.addEventListener('WebComponentsReady', function() {
           		var calendar = document.querySelector('calendar-component');
+          		
           		document.addEventListener('EventClicked', function(e) {
-            			alert(e.detail.subject);
+            			alert('Event clicked : ['+e.detail.subject+']');
             		});
   			})
         </script>

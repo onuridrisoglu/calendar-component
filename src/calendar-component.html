@@ -36,7 +36,7 @@
 			<vaadin-button theme="tertiary-inline" on-click="_navigateToPreviousMonth">
 				<iron-icon icon="lumo:arrow-left"></iron-icon>
 			</vaadin-button>
-			<span class="current-month">[[selectedDateText]]</span>			
+			<span class="current-month">[[activeDateText]]</span>			
 			<vaadin-button theme="tertiary-inline" on-click="_navigateToNextMonth">
 				<iron-icon icon="lumo:arrow-right"></iron-icon>
 			</vaadin-button>			
@@ -52,13 +52,14 @@
             }
             static get properties() {
                 return {
-	                	selectedDate: {
+	                	activeDate: {
 		            		type: Date,
 		            		value: new Date((new Date()).getFullYear(), (new Date()).getMonth(), 1),
+		            		reflectToAttribute: true,
 		            		notify: true,
 		            		observer : '_processSelectedDateChange'
 		            },
-	                	selectedDateText: {
+	                	activeDateText: {
 		            		type: String,
 		            		value: ''
 		            },
@@ -145,19 +146,19 @@
         		}
             _setSelectedDateText(val) {
             		var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            		this.selectedDateText = MONTHS[val.getMonth()] + " " + val.getFullYear();
+            		this.activeDateText = MONTHS[val.getMonth()] + " " + val.getFullYear();
             }
             _navigateToPreviousMonth() {
-            		var prevMonth = new Date(this.selectedDate.getTime());
+            		var prevMonth = new Date(this.activeDate.getTime());
             		prevMonth.setDate(1);
             		prevMonth.setMonth(prevMonth.getMonth() - 1);
-            		this.selectedDate = prevMonth;
+            		this.activeDate = prevMonth;
             }
             _navigateToNextMonth() {
-	            	var nextMonth = new Date(this.selectedDate.getTime());
+	            	var nextMonth = new Date(this.activeDate.getTime());
 	            	nextMonth.setDate(1);
 	        		nextMonth.setMonth(nextMonth.getMonth() + 1);
-	        		this.selectedDate = nextMonth;
+	        		this.activeDate = nextMonth;
             }
             _addEvent(item) {
          		for (var column of this.$.container.children){

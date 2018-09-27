@@ -27,6 +27,14 @@ Your application is already set up to be tested via [web-component-tester](https
   <template>
     <script src="../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="calendar-component.html">
+    	<script>
+	    	document.addEventListener('WebComponentsReady', function() {
+	    		var calendar = document.querySelector('calendar-component');
+	    		document.addEventListener('EventClicked', function(e) {
+	      			alert('Event clicked : ['+e.detail.subject+']');
+	      	});
+		})
+	  </script>
     <next-code-block></next-code-block>
   </template>
 </custom-element-demo>

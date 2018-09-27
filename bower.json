@@ -2,12 +2,13 @@
   "name": "calendar-component",
   "description": "Web component for displaying items in calendar view",
   "main": "calendar-component.html",
+  "license": "Apache-2.0",
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.0",
+    "polymer": "^2.0.0",
     "vaadin-button": "vaadin/vaadin-button#^2.1.0",
     "vaadin-icons": "vaadin/vaadin-icons#^4.2.0",
     "vaadin-text-field": "vaadin/vaadin-text-field#^2.1.2",
-    "iron-icon": "@polymer/iron-icon#^2.0.1"
+    "iron-icon": "^2.0.1"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",

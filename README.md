@@ -26,7 +26,7 @@ Your application is already set up to be tested via [web-component-tester](https
 <custom-element-demo>
   <template>
     <script src="../webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="src/calendar-component.html">
+    <link rel="import" href="calendar-component.html">
     <next-code-block></next-code-block>
   </template>
 </custom-element-demo>

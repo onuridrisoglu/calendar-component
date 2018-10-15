@@ -5,13 +5,13 @@
 <link rel="import" href="../../vaadin-lumo-styles/spacing.html">
 <link rel="import" href="../../vaadin-lumo-styles/color.html">
 
-<dom-module id="calendar-month">
+<dom-module id="calendar-cell">
     <template>
     	<style include="lumo-typography lumo-color">
 		 :host([is-today]) .column-wrapper {
 		    border-top-color: var(--lumo-contrast-50pct);
 		 }
-		 :host(:not([is-selected-month])) .month-wrapper {
+		 :host(:not([is-active])) .month-wrapper {
 		 	background-color: var(--lumo-contrast-5pct);
 		 }
     		.month-wrapper {
@@ -21,7 +21,7 @@
 		    user-select: none;
 		    margin-left: var(--lumo-space-xs);
 		    border-top: var(--lumo-space-xs) solid var(--lumo-contrast-10pct);
-    			min-height: 105px;
+    			min-height: 115px;
     		}
     		
     		.month-header {
@@ -49,29 +49,22 @@
 </div>
 </template>
     <script>
-        class CalendarMonth extends Polymer.Element {
+        class CalendarCell extends Polymer.Element {
             static get is() {
-                return 'calendar-month';
+                return 'calendar-cell';
             }
             static get properties() {
                 return {
-                    colDate: {
+                    date: {
 		                type: Date,
 		                value: new Date(),
-		                observer: '_columnDateChanged'
+		                observer: '_dateChanged'
 		            },
-		            selectedDate: {
-		            		type: Date,
-		            		value: new Date()
-		            },
-		            isSelectedMonth: {
+		            isActive: {
 		            		type : Boolean,
 		            		reflectToAttribute: true
 		            	},
-		            isToday: {
-		            		type : Boolean,
-		            		reflectToAttribute: true
-		            	},
+		            isToday: Boolean,
 		            title: String
                 };
             }
@@ -83,12 +76,12 @@
             		while (container.firstChild)
             			container.removeChild(container.firstChild);
             }
-            _columnDateChanged(val) {
-            		this._setColumnDateTitle(val);
-            		this._setIsSelectedMonth(val); 		
+            _dateChanged(val) {
+            		this._setTitle(val);
+            		this._setIsToday(val); 		
             }
             
-            _setColumnDateTitle(val) {
+            _setTitle(val) {
             		var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
             		var date = val.getDate();
             		this.title = date;
@@ -100,12 +93,11 @@
             			return;
             		this.title = this.title + ", " + val.getFullYear();  
             }
-            _setIsSelectedMonth(val) {
-            		this.isSelectedMonth = val.getYear() == this.selectedDate.getYear() && val.getMonth() == this.selectedDate.getMonth();
+            _setIsToday(val) {
             		var now = new Date();
             		this.isToday = val.getYear() == now.getYear() && val.getMonth() == now.getMonth() && val.getDate() == now.getDate();
             }
         }
-        customElements.define(CalendarMonth.is, CalendarMonth);
+        customElements.define(CalendarCell.is, CalendarCell);
     </script>
 </dom-module>

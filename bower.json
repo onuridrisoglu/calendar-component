@@ -8,6 +8,7 @@
     "vaadin-button": "vaadin/vaadin-button#^2.1.0",
     "vaadin-icons": "vaadin/vaadin-icons#^4.2.0",
     "vaadin-text-field": "vaadin/vaadin-text-field#^2.1.2",
+    "iron-resizable-behavior": "^2.1.1",
     "iron-icon": "^2.0.1"
   },
   "devDependencies": {

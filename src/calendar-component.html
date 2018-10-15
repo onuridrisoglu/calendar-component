@@ -3,7 +3,8 @@
 <link rel="import" href="../../vaadin-icons/vaadin-icons.html">
 <link rel="import" href="../../vaadin-button/vaadin-button.html">
 <link rel="import" href="../../vaadin-lumo-styles/spacing.html">
-<link rel="import" href="calendar-month.html">
+<link rel="import" href="calendar-component-mixin.html">
+<link rel="import" href="calendar-cell.html">
 <link rel="import" href="calendar-header.html">
 <link rel="import" href="calendar-event.html">
 
@@ -18,7 +19,7 @@
     			}
     			.calendar-container > *{
     				flex: 1 1 14.2%;
-    				min-width: 80px;
+     			min-width: 80px; 
     			}
     			:host([hide-weekends]) .calendar-container > * {
 			    flex: 1 1 20%;
@@ -46,7 +47,7 @@
     		</div>
 	</template>
     <script>
-        class CalendarComponent extends Polymer.Element {
+        class CalendarComponent extends CalendarComponentMixin(Polymer.Element) {
             static get is() {
                 return 'calendar-component';
             }
@@ -73,11 +74,11 @@
 		            		reflectToAttribute: true,
 		            		observer : '_processItemsChange'
 		            }
+		            
                 };
             }
-            eventClicked(e) {
-            		console.log(e);
-            		document.dispatchEvent(new CustomEvent('EventClicked', {detail: e.detail}));
+            _eventClicked(e) {
+            		this.dispatchEvent(new CustomEvent('event-clicked', { detail : e.detail}));
             }
             ready() {
 	            	super.ready();
@@ -93,6 +94,9 @@
             }
             _processItemsChange(items) {
 	        		this._clearEvents();
+	        		items.sort(function(item1, item2) {
+	        			  return new Date(item1.date).getTime() - new Date(item2.date).getTime();
+	        		});
 	        		if (items)
 		        		for (var item of items) {
 		        			this._addEvent(item);
@@ -110,9 +114,10 @@
             			container.removeChild(container.firstChild);
             }
             _createHeaders() {
-         		var days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-         		for (var day of days) {
-         			if (this.hideWeekends && (day === 'Sat' || day === 'Sun'))
+            		var days = this.i18n.weekdaysShort;
+         		for (var i = 0; i < 7; i++) {
+         			var day = days[(this.i18n.firstDayOfWeek + i) % 7];
+         			if (this.hideWeekends && (day === days[0] || day === days[6]))
          				continue;
          		    var header = new CalendarHeader();
          		    header.setAttribute("title", day);
@@ -128,25 +133,24 @@
          		while (index.getDay() != 1)  
          			index.setDate(index.getDate() -1);
          		while ((index.getMonth() <= currentMonth && index.getYear() == now.getYear()) || (index.getYear() < now.getYear())) {
-         			var column = new CalendarMonth();
-         			column.setAttribute("col-date", index);
-         			column.setAttribute("selected-date", now);
+         			var column = new CalendarCell();
+         			column.setAttribute("date", index);
+         			if (index.getMonth() == currentMonth && index.getYear() == now.getYear())
+         				column.setAttribute("is-active", true);
          			if (!this.hideWeekends || (index.getDay() != 0 && index.getDay() != 6))
          				this.$.container.appendChild(column);
          			index.setDate(index.getDate() + 1);
          		}
          		while (index.getDay() != 1)  {
-         			var column = new CalendarMonth();
-         			column.setAttribute("col-date", index);
-         			column.setAttribute("selected-date", now);
+         			var column = new CalendarCell();
+         			column.setAttribute("date", index);
          			if (!this.hideWeekends || (index.getDay() != 0 && index.getDay() != 6))
          				this.$.container.appendChild(column);
          			index.setDate(index.getDate()  + 1);
          		}
         		}
             _setSelectedDateText(val) {
-            		var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            		this.activeDateText = MONTHS[val.getMonth()] + " " + val.getFullYear();
+            		this.activeDateText = this.i18n.formatTitle(this.i18n.monthNamesShort[val.getMonth()], val.getFullYear());
             }
             _navigateToPreviousMonth() {
             		var prevMonth = new Date(this.activeDate.getTime());
@@ -161,22 +165,22 @@
 	        		this.activeDate = nextMonth;
             }
             _addEvent(item) {
-         		for (var column of this.$.container.children){
-         			if (column.tagName === 'CALENDAR-HEADER')
+         		for (var cell of this.$.container.children){
+         			if (cell.tagName === 'CALENDAR-HEADER')
          		    		continue;
          			var itemDate = new Date(item.date);
-         		    	if (column.colDate.toDateString() === itemDate.toDateString()){
+         		    	if (cell.date.toDateString() === itemDate.toDateString()){
          		    		var ce = new CalendarEvent();
          		    		ce.item = item;
-         		    		ce.addEventListener('event-clicked', this.eventClicked);
-         		    		column.appendEvent(ce);
+         		    		ce.addEventListener('event-clicked', this._eventClicked.bind(this));
+         		    		cell.appendEvent(ce);
          		    	}
          		 }
             }
             _clearEvents() {
-	            	for (var column of this.$.container.children){
-			    		if (column.tagName !== 'CALENDAR-HEADER')
-			    			column.clearEvents();
+	            	for (var cell of this.$.container.children){
+			    		if (cell.tagName !== 'CALENDAR-HEADER')
+			    			cell.clearEvents();
 			    }
             }
         }

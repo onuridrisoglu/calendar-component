@@ -30,9 +30,9 @@ Your application is already set up to be tested via [web-component-tester](https
     	<script>
 	    	document.addEventListener('WebComponentsReady', function() {
 	    		var calendar = document.querySelector('calendar-component');
-	    		document.addEventListener('EventClicked', function(e) {
-	      			alert('Event clicked : ['+e.detail.subject+']');
-	      	});
+      		calendar.addEventListener('event-clicked', function(e) {
+    				alert('Event clicked : ['+e.detail.subject+']');
+    			});
 		})
 	  </script>
     <next-code-block></next-code-block>
@@ -41,5 +41,5 @@ Your application is already set up to be tested via [web-component-tester](https
 ```
 -->
 ```html
-<calendar-component active-date="2018-08-01" items='[{"date":"2018-08-08","subject":"Meeting"}, {"date":"2018-08-14","subject":"Dentist Appointment"}, {"date":"2018-08-24","subject":"Dinner with Friends"}]'></calendar-component>
+<calendar-component active-date="2018-08-01" items='[{"date":"2018-08-08 20:00","subject":"Meeting", "theme" : "primary"}, {"date":"2018-08-14 12:30","subject":"Dentist Appointment", "theme" : "contrast primary"}, {"date":"2018-08-24 19:30","subject":"Dinner with Friends", "theme" : "success primary"}]'></calendar-component>
 ```

@@ -41,5 +41,5 @@ Your application is already set up to be tested via [web-component-tester](https
 ```
 -->
 ```html
-<calendar-component active-date="2018-08-01" items='[{"date":"2018-08-08 20:00","subject":"Meeting", "theme" : "primary"}, {"date":"2018-08-14 12:30","subject":"Dentist Appointment", "theme" : "contrast primary"}, {"date":"2018-08-24 19:30","subject":"Dinner with Friends", "theme" : "success primary"}]'></calendar-component>
+<calendar-component active-date="2018-08-01" items='[{"date":"2018-08-08T20:00","subject":"Meeting", "theme" : "primary"}, {"date":"2018-08-14T12:30","subject":"Dentist Appointment", "theme" : "contrast primary"}, {"date":"2018-08-24T19:30","subject":"Dinner with Friends", "theme" : "success primary"}]'></calendar-component>
 ```

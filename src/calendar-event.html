@@ -33,7 +33,10 @@
     		</style>
 		<div class="event-item" theme$="badge small [[item.theme]]" on-click="processItemClicked">
 			<div class="event-title">
+				<!-- [[ if(item.uri == '') else
 				<span title=[[item.subject]] >[[item.subject]]</span>
+				-->
+                                <a title=[[item.subject]] href=[[item.uri]] >[[item.subject]]</a>
 			</div>
 			<div class="event-time">[[time]]</div>
 		</div>

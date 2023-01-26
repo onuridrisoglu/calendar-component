@@ -72,8 +72,14 @@
             		this.dispatchEvent(new CustomEvent('event-clicked', {detail: this.item}));
             }
             _processItemChange() {
-            		var d = new Date(this.item.date);
-            		this.time = (d.getHours()<10?"0":"") + d.getHours() + ":" + (d.getMinutes() < 10 ? "0":"") + d.getMinutes();
+			if(this.item.date.search("T") > 0 )
+                          var d = new Date(this.item.date);
+			  this.time = (d.getHours()<10?"0":"") + d.getHours() + ":" + (d.getMinutes() < 10 ? "0":"") + d.getMinutes();
+			else
+			  if(this.item.time.length > 0 )
+			    this.time = this.item.time
+			  else
+			    this.time = null
             }
             _handleResize(e) {
             		this.hideTime = this.getBoundingClientRect().width < 140;

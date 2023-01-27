@@ -72,10 +72,10 @@
             		this.dispatchEvent(new CustomEvent('event-clicked', {detail: this.item}));
             }
             _processItemChange() {
-			if(this.item.date.search("T") > 0 )
+			if(this.item.date.search("T") > 0 ) {
                           var d = new Date(this.item.date);
 			  this.time = (d.getHours()<10?"0":"") + d.getHours() + ":" + (d.getMinutes() < 10 ? "0":"") + d.getMinutes();
-			else
+			} else
 			  if(this.item.time.length > 0 )
 			    this.time = this.item.time
 			  else

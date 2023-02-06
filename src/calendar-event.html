@@ -76,7 +76,7 @@
                           var d = new Date(this.item.date);
 			  this.time = (d.getHours()<10?"0":"") + d.getHours() + ":" + (d.getMinutes() < 10 ? "0":"") + d.getMinutes();
 			} else
-			  if(this.item.time.length > 0 )
+                          if(this.item.time && this.item.time.length > 0 )
 			    this.time = this.item.time
 			  else
 			    this.time = null

@@ -77,7 +77,7 @@
 			  this.time = (d.getHours()<10?"0":"") + d.getHours() + ":" + (d.getMinutes() < 10 ? "0":"") + d.getMinutes();
 			} else
                           if(this.item.time && this.item.time.length > 0 )
-			    this.time = this.item.time
+			    this.time = this.item.time.replace(":00","")
 			  else
 			    this.time = null
             }
